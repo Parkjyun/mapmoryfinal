@@ -1,14 +1,13 @@
 package com.example.mapmory.diary.service;
 
 import com.example.mapmory.diary.domain.Diary;
-import com.example.mapmory.member.domain.Member;
 import com.example.mapmory.diary.dto.DiaryRequestDto;
 import com.example.mapmory.diary.dto.DiaryResponseDto;
 import com.example.mapmory.marker.dto.MarkerRequestDto;
 import com.example.mapmory.marker.dto.MarkerResponseDto;
 import com.example.mapmory.diary.repository.DiaryRepository;
+import com.example.mapmory.member.domain.entity.Member;
 import com.example.mapmory.member.repository.MemberRepository;
-import com.example.mapmory.diary.service.S3UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

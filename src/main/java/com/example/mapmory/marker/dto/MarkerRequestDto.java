@@ -1,7 +1,7 @@
 package com.example.mapmory.marker.dto;
 
 import com.example.mapmory.diary.domain.Diary;
-import com.example.mapmory.member.domain.Member;
+import com.example.mapmory.member.domain.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

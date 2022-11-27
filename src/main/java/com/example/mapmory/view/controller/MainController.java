@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class MainController {
 
-    @GetMapping("/kakaomain")
+    @GetMapping("/das")
     public String showMainView()
     {
         return "hrloaso";

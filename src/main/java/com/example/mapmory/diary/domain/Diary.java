@@ -1,6 +1,6 @@
 package com.example.mapmory.diary.domain;
 
-import com.example.mapmory.member.domain.Member;
+import com.example.mapmory.member.domain.entity.Member;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
