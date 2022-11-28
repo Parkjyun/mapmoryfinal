@@ -44,4 +44,5 @@ public class DiaryController {
         diaryResponseDto = diaryService.getDiaryService(id, idx);
         return diaryResponseDto;
     }
+
 }

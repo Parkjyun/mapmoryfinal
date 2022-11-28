@@ -3,6 +3,8 @@ package com.example.mapmory.member.service;
 import com.example.mapmory.member.domain.Role;
 import com.example.mapmory.member.domain.entity.Member;
 import com.example.mapmory.member.dto.MemberDto;
+import com.example.mapmory.member.dto.MemberRequestDto;
+import com.example.mapmory.member.dto.MemberResponseDto;
 import com.example.mapmory.member.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -66,4 +68,8 @@ public class MemberService implements UserDetailsService {
 
         return
     }*/
+    public MemberResponseDto findBy(final MemberRequestDto params){
+        MemberResponseDto entity = memberRepository.findByEmailAndPassword(params.getEmail(), params.getPassword());
+        return entity;
+    }
 }

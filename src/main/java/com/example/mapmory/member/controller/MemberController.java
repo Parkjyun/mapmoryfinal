@@ -1,6 +1,8 @@
 package com.example.mapmory.member.controller;
 
 import com.example.mapmory.member.dto.MemberDto;
+import com.example.mapmory.member.dto.MemberRequestDto;
+import com.example.mapmory.member.dto.MemberResponseDto;
 import com.example.mapmory.member.service.MemberService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -50,4 +52,10 @@ public class MemberController {
         }
         MemberDto memberDto;
     }*/
+    @PostMapping("user/signin")
+    public MemberResponseDto signIn(@RequestBody final MemberRequestDto params){
+        MemberResponseDto entity = memberService.findBy(params);
+        System.out.println(entity);
+        return entity;
+    }
 }
