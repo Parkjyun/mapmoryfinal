@@ -29,18 +29,20 @@ public class MemberService implements UserDetailsService {
         // 비밀번호 암호화
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
-
+        if(memberRepository.existsByEmail(memberDto.getEmail()) == true){
+            return null;
+        }
         return memberRepository.save(memberDto.toEntity()).getId();
     }
 
     @Override
-    public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
-        Optional<Member> userEntityWrapper = memberRepository.findByEmail(userEmail);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<Member> userEntityWrapper = memberRepository.findByEmail(email);
         Member userEntity = userEntityWrapper.get();
 
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-        if (("admin@example.com").equals(userEmail)) {
+        if (("admin@example.com").equals(email) ) {
             authorities.add(new SimpleGrantedAuthority(Role.ADMIN.getValue()));
         } else {
             authorities.add(new SimpleGrantedAuthority(Role.MEMBER.getValue()));
@@ -48,4 +50,20 @@ public class MemberService implements UserDetailsService {
 
         return new User(userEntity.getEmail(), userEntity.getPassword(), authorities);
     }
+
+    public boolean checkEmail(String email){
+        return memberRepository.existsByEmail(email);
+    }
+
+    public boolean checkNickname(String nickname){
+        return memberRepository.existsByNickname(nickname);
+    }
+
+/*    public MemberDto getUser(String email) {
+        Optional<Member> memberEntity = memberRepository.findByEmail(email);
+        if (memberEntity == null) throw new UsernameNotFoundException(email);
+
+
+        return
+    }*/
 }

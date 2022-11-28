@@ -1,11 +1,20 @@
 package com.example.mapmory.member.dto;
 
 import com.example.mapmory.member.domain.entity.Member;
+import lombok.Data;
 import lombok.Getter;
 
+import javax.persistence.*;
+
 @Getter
+@Table(name = "member")
+@Data
 public class MemberDto {
-    private Long memberId;
+
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name = "member_id")
+    private Long id;
 //유효성 검사에 필요한 Dto 객체에 Validation 어노테이션 사용
     private String nickname;
 
@@ -13,11 +22,11 @@ public class MemberDto {
 
     private String password;
     public Long getId() {
-        return memberId;
+        return id;
     }
 
     public void setId(Long id) {
-        this.memberId = id;
+        this.id = id;
     }
 
     public String getNickname() {
@@ -29,7 +38,7 @@ public class MemberDto {
     }
 
     public Long getMemberId() {
-        return memberId;
+        return id;
     }
 
     public void setPassword(String password) {
@@ -46,6 +55,7 @@ public class MemberDto {
 
     public Member toEntity(){
         return Member.builder()
+                .id(id)
                 .email(email)
                 .password(password)
                 .nickname(nickname)
