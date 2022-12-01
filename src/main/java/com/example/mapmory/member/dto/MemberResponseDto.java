@@ -10,7 +10,7 @@ public class MemberResponseDto {
 
     private Long id;
     private String email;
-    private String name;
+
     private String password;
 
     public MemberResponseDto(Member member){

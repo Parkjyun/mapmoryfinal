@@ -1,12 +1,15 @@
 package com.example.mapmory.member.controller;
 
+import com.example.mapmory.member.domain.entity.Member;
 import com.example.mapmory.member.dto.MemberDto;
 import com.example.mapmory.member.dto.MemberRequestDto;
 import com.example.mapmory.member.dto.MemberResponseDto;
 import com.example.mapmory.member.service.MemberService;
+import com.sun.xml.bind.v2.runtime.reflect.Accessor;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -53,9 +56,12 @@ public class MemberController {
         MemberDto memberDto;
     }*/
     @PostMapping("user/signin")
-    public MemberResponseDto signIn(@RequestBody final MemberRequestDto params){
-        MemberResponseDto entity = memberService.findBy(params);
-        System.out.println(entity);
-        return entity;
+    public MemberResponseDto signIn(@RequestBody  MemberRequestDto memberRequestDto){
+        System.out.println("포스트로 들어온 아이디는:"+memberRequestDto.getEmail()+"비밀번호는"+memberRequestDto.getPassword());
+        System.out.println(memberService.findUser(memberRequestDto));
+
+
+
+        return null;
     }
 }

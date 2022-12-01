@@ -15,13 +15,17 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(length = 20)
+    @Column(length = 50)
     private String email;
 
     @Column(length = 100)
     private String password;
 
     private String nickname;
+
+    public String getPassword() {
+        return password;
+    }
 
     @Builder
     public Member(Long id, String email, String password, String nickname) {
