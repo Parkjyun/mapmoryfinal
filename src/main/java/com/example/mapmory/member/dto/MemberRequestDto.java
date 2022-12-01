@@ -11,6 +11,16 @@ public class MemberRequestDto {
     private String email;
     private String password;
 
+    private String nickname;
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -26,6 +36,7 @@ public class MemberRequestDto {
     public String getPassword() {
         return password;
     }
+
 
     public Member toEntity(){
         return Member.builder()

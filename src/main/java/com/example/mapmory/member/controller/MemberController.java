@@ -4,6 +4,7 @@ import com.example.mapmory.member.domain.entity.Member;
 import com.example.mapmory.member.dto.MemberDto;
 import com.example.mapmory.member.dto.MemberRequestDto;
 import com.example.mapmory.member.dto.MemberResponseDto;
+import com.example.mapmory.member.dto.NicknameResponseDto;
 import com.example.mapmory.member.service.MemberService;
 import com.sun.xml.bind.v2.runtime.reflect.Accessor;
 import lombok.AllArgsConstructor;
@@ -19,13 +20,13 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
     private MemberService memberService;
 
-    // 회원가입 처리
+    // 회원가입 처리 // 포스트매핑
     @PostMapping("/user/signup")
-    public String execSignup(@RequestBody MemberDto memberDto) {
+    public Member execSignup(@RequestBody MemberDto memberDto) {
         System.out.println(memberDto.getEmail());
         System.out.println(memberDto.getNickname());
-        memberService.joinUser(memberDto);
-        return "post";
+        Member memberEntity = memberService.joinUser(memberDto);
+        return memberEntity;
     }
 
     //닉네임이 중복인지 체크하기 위한 메서드
@@ -46,21 +47,21 @@ public class MemberController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(true);
     }
-
-    //로그인 성공시 유저 상태 저장, check메서드 수행,!상태 저장!
-    /*@GetMapping("{email}/check")
-    public ResponseEntity<?> check(@PathVariable("email") String email) {
-        if (email == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not user");
-        }
-        MemberDto memberDto;
-    }*/
+    //로그인 화면 -> 유저 아이디 값 (1,2,3,4)를 반환해줌
     @PostMapping("user/signin")
-    public MemberResponseDto signIn(@RequestBody  MemberRequestDto memberRequestDto){
-        System.out.println("포스트로 들어온 아이디는:"+memberRequestDto.getEmail()+"비밀번호는"+memberRequestDto.getPassword());
+    public MemberResponseDto signIn(@RequestBody MemberRequestDto memberRequestDto) {
+        //System.out.println("포스트로 들어온 아이디는:" + memberRequestDto.getEmail() + "비밀번호는" + memberRequestDto.getPassword());
         System.out.println(memberService.findUser(memberRequestDto));
         MemberResponseDto responseDto = memberService.findUser(memberRequestDto);
-        System.out.println("멥버아이디는?"+ responseDto.getId());
+        //System.out.println("멥버아이디는?" + responseDto.getId());
+        return responseDto;
+    }
+
+    //닉네임 찾기 -> 닉네임을 찾아줌
+    @GetMapping("member/{id}/nickname/")
+    public NicknameResponseDto findMemberNickname(@PathVariable("id") Long id) {
+        Member member = memberService.findByNickname(id);
+        NicknameResponseDto responseDto = new NicknameResponseDto(member);
         return responseDto;
     }
 }

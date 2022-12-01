@@ -27,10 +27,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class MemberService implements UserDetailsService {
     private MemberRepository memberRepository;
-
-
     @Transactional
-    public Long joinUser(MemberDto memberDto) {
+    public Member joinUser(MemberDto memberDto) {
         // 비밀번호 암호화
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
@@ -41,7 +39,7 @@ public class MemberService implements UserDetailsService {
         if(memberRepository.existsByEmail(memberDto.getEmail()) == true){
             return null;
         }
-        return memberRepository.save(memberDto.toEntity()).getId();
+        return memberRepository.save(memberDto.toEntity());
     }
 
     public MemberResponseDto findUser(MemberRequestDto memberRequestDto){
@@ -77,13 +75,13 @@ public class MemberService implements UserDetailsService {
         return memberRepository.existsByNickname(nickname);
     }
 
-/*    public MemberDto getUser(String email) {
-        Optional<Member> memberEntity = memberRepository.findByEmail(email);
-        if (memberEntity == null) throw new UsernameNotFoundException(email);
-        return
-    }*/
     public MemberResponseDto findBy(final MemberRequestDto params){
         MemberResponseDto entity = memberRepository.findByEmailAndPassword(params.getEmail(), params.getPassword());
         return entity;
+    }
+
+    public Member findByNickname(final Long id ){
+
+        return memberRepository.findById(id).get();
     }
 }
