@@ -59,9 +59,8 @@ public class MemberController {
     public MemberResponseDto signIn(@RequestBody  MemberRequestDto memberRequestDto){
         System.out.println("포스트로 들어온 아이디는:"+memberRequestDto.getEmail()+"비밀번호는"+memberRequestDto.getPassword());
         System.out.println(memberService.findUser(memberRequestDto));
-
-
-
-        return null;
+        MemberResponseDto responseDto = memberService.findUser(memberRequestDto);
+        System.out.println("멥버아이디는?"+ responseDto.getId());
+        return responseDto;
     }
 }

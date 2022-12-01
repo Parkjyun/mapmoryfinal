@@ -44,13 +44,14 @@ public class MemberService implements UserDetailsService {
         return memberRepository.save(memberDto.toEntity()).getId();
     }
 
-    public boolean findUser(MemberRequestDto memberRequestDto){
+    public MemberResponseDto findUser(MemberRequestDto memberRequestDto){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Member member = memberRepository.findByEmail(memberRequestDto.getEmail()).get();
         System.out.println(member.getPassword());
-        if(passwordEncoder.matches(memberRequestDto.getPassword(),member.getPassword()))
-            return true;
-       return false;
+        if(passwordEncoder.matches(memberRequestDto.getPassword(),member.getPassword())) {
+            return new MemberResponseDto(member);
+        }
+       return null;
     }
 
     @Override
