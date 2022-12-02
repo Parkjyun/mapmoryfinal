@@ -12,9 +12,11 @@ public class MemberResponseDto {
 
     private String nickname;
 
+    private String email;
+    private String password;
     public MemberResponseDto(Member member){
         this.id = member.getId();
-
+        this.nickname = member.getNickname();
     }
 
 
