@@ -2,6 +2,7 @@ package com.example.mapmory.diary.dto;
 
 import com.example.mapmory.marker.domain.Marker;
 
+import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
 
 public class DiaryDto {
@@ -12,6 +13,7 @@ public class DiaryDto {
     //private Long imageId;
     private LocalDateTime createDate;
     private LocalDateTime updatedDate;
+
 
 
     public Long getId() {

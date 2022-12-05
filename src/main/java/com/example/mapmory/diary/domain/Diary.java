@@ -1,5 +1,6 @@
 package com.example.mapmory.diary.domain;
 
+import com.example.mapmory.marker.domain.Marker;
 import com.example.mapmory.member.domain.entity.Member;
 import lombok.Builder;
 import lombok.Data;
@@ -19,11 +20,12 @@ import java.time.LocalDate;
 public class Diary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "diary_id")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "marker_id")
+    private Marker marker;
 
     private String title;
 
@@ -31,9 +33,6 @@ public class Diary {
 
     private String imageUrl;
 
-    private Double longtitude;
-
-    private Double latitude;
 
     @CreatedDate
     private LocalDate createDate;
@@ -42,14 +41,13 @@ public class Diary {
     private LocalDate updatedDate;
 
     @Builder
-    public Diary(Member member, String title, String content, String imageUrl, Double latitude, Double longtitude) {
+    public Diary(Marker marker, String title, String content, String imageUrl) {
 
-        this.member = member;
+        this.marker = marker;
         this.title = title;
         this.content = content;
         this.imageUrl = imageUrl;
-        this.latitude = latitude;
-        this.longtitude = longtitude;
+
     }
 }
 

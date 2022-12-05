@@ -1,5 +1,6 @@
 package com.example.mapmory.marker.dto;
 
+
 import com.example.mapmory.member.domain.entity.Member;
 
 public class MarkerDto {

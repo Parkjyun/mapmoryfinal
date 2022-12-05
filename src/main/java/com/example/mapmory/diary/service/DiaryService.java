@@ -1,12 +1,14 @@
 package com.example.mapmory.diary.service;
 
 import com.example.mapmory.diary.domain.Diary;
+import com.example.mapmory.marker.domain.Marker;
+import com.example.mapmory.marker.repository.MarkerRepository;
+import com.example.mapmory.member.domain.entity.Member;
 import com.example.mapmory.diary.dto.DiaryRequestDto;
 import com.example.mapmory.diary.dto.DiaryResponseDto;
 import com.example.mapmory.marker.dto.MarkerRequestDto;
 import com.example.mapmory.marker.dto.MarkerResponseDto;
 import com.example.mapmory.diary.repository.DiaryRepository;
-import com.example.mapmory.member.domain.entity.Member;
 import com.example.mapmory.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,6 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DiaryService {
@@ -26,21 +27,24 @@ public class DiaryService {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private MarkerRepository markerRepository;
     @Autowired
     private S3UploadService s3UploadService;
 
     @Transactional
-    public Long saveMarker(MarkerRequestDto requestDto) {//이미지랑 위도경도 받고
+    public Long saveMarker(MarkerRequestDto requestDto) {
 
 
         Member member = memberRepository.findById(requestDto.getMemberId()).get();
-        Diary diary = diaryRepository.save(requestDto.toEntity(member));
-        return diary.getId();
+        Marker marker = markerRepository.save(requestDto.toEntity(member));
+        return marker.getId();
     }
     @Transactional
     public Long saveDiary(MultipartFile image, DiaryRequestDto requestDto) throws IOException {
         System.out.println("Diary service saveDiary");
-        Member member = memberRepository.findById(requestDto.getMemberId()).get();
+        Marker marker = markerRepository.findById(requestDto.getMarkerId()).get();
 
 
         if(!image.isEmpty()) {
@@ -49,49 +53,49 @@ public class DiaryService {
         }
         //diary.setMember(memberRepository.findById(diary.getId()).get());//1117cnrk
         //Diary savedDiary = diaryRepository.save(diary);
-        Diary savedDiary = diaryRepository.save(requestDto.toEntity(member));
+        Diary savedDiary = diaryRepository.save(requestDto.toEntity(marker));
 
         return savedDiary.getId();
     }
-    public Optional<Diary> Update(Long id, Long idx, MultipartFile image ,DiaryRequestDto requestDto) throws IOException {
+    public Diary create(Long id, Long idx, MultipartFile image ,DiaryRequestDto requestDto) throws IOException {
         System.out.println("Diary service saveDiary");
 
-        Member member = memberRepository.findById(requestDto.getMemberId()).get();
-        List<Diary> diaryList = diaryRepository.findByMember_Id(id);
-        Diary updateDiary = diaryList.get(Math.toIntExact(idx-1));
+/*
+        List<Marker> markerList = markerRepository.findByMember_Id(id);
+        //List<Diary> entityList = diaryRepository.findByMarker_Id(idx);
+        Marker marker = markerList.get(Math.toIntExact(idx-1));
+*/
+        //12/1바꾼 부분 마커를 그냥 idx로 바꾸면 되지 않아?
+
+        Marker marker = markerRepository.findById(idx).get();
+
+
+
         if(!image.isEmpty()) {
             String storedFileName = s3UploadService.upload(image,"images");//storedfilename == url
             requestDto.setImageUrl(storedFileName);
         }
         // 일단 idx에 맞는 값들을 찾아와
-        Optional<Diary> entity = Optional.ofNullable(updateDiary);
-        // ifPresent는 컨슈머를 매개변수로 입력받아서 객체가 존재할 때만 실행하는 Optional의 메소드입니다.
-        entity.ifPresent(t ->{
-            // 내용이 널이 아니라면 엔티티의 객체를 바꿔준다.
-            if(requestDto.getContent() != null) {
-                t.setContent(requestDto.getContent());
-            }
-            if(requestDto.getTitle() != null) {
-                t.setTitle(requestDto.getTitle());
-            }
-            if(requestDto.getImageUrl() != null) {
-                t.setImageUrl(requestDto.getImageUrl());
-            }
-            // 이걸 실행하면 idx 때문에 update가 실행됩니다.
-            this.diaryRepository.save(t);
-        });
 
-        return entity;
+        Diary diary = diaryRepository.save(requestDto.toEntity(marker));
+
+
+        return diary;
     }
 
-    public DiaryResponseDto getDiaryService(Long id, Long idx) {//id는 멤버의 id idx는 게시글의 순서(0부터 시ㅑㅇ)
+    public DiaryResponseDto getDiaryService(Long id, Long idx) {
+        List<Marker> markerList = markerRepository.findByMember_Id(id);
+        //List<Diary> entityList = diaryRepository.findByMarker_Id(idx);
+      //  Marker marker = markerList.get(Math.toIntExact(idx-1));
+        Marker marker = markerRepository.findById(idx).get();
+        Diary diary =diaryRepository.findByMarker_Id(marker.getId()).get(0);
 
-        List<Diary> entityList = diaryRepository.findByMember_Id(id);
-        Diary diary = entityList.get(Math.toIntExact(idx-1));
+
+        //Diary diary = entityList.get(Math.toIntExact(idx-1));
 
         DiaryResponseDto responseDto = new DiaryResponseDto();
         responseDto.setId(diary.getId());
-        responseDto.setMember(diary.getMember());
+        responseDto.setMember(diary.getMarker().getMember());
         responseDto.setTitle(diary.getTitle());
         responseDto.setContent(diary.getContent());
         responseDto.setImageUrl(diary.getImageUrl());
@@ -103,18 +107,40 @@ public class DiaryService {
     }
     public List<MarkerResponseDto> getMarker(Long id) {
 
-        List<Diary> entityList = diaryRepository.findByMember_Id(id);
+        List<Marker> entityList = markerRepository.findByMember_Id(id);
         List<MarkerResponseDto> result = new ArrayList<>();
 
         entityList.forEach(entity -> {
             MarkerResponseDto responseDto = new MarkerResponseDto();
-            responseDto.setLatitude(entity.getLatitude());
-            responseDto.setLongtitude(entity.getLongtitude());
+            responseDto.setMarkerId(entity.getId());
+            responseDto.setLat(entity.getLatitude());
+            responseDto.setLng(entity.getLongtitude());
             result.add(responseDto);
         });
 
         return result;
     }
 
+    public List<DiaryResponseDto> getDiary(Long idx) {
+        List<Diary> entityList = diaryRepository.findByMarker_Id(idx);
+        List<DiaryResponseDto> result = new ArrayList<>();
 
+        entityList.forEach(entity -> {
+            DiaryResponseDto responseDto = new DiaryResponseDto();
+            responseDto.setId(entity.getId());
+            responseDto.setCreateDate(entity.getCreateDate());
+            responseDto.setImageUrl(entity.getImageUrl());
+            responseDto.setContent(entity.getContent());
+            responseDto.setTitle(entity.getTitle());
+            result.add(responseDto);
+        });
+
+        return result;
+
+    }
+
+
+    //public List<DiaryResponseDto> getDiarys(Long id, Long idx) {
+
+    //}
 }

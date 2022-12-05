@@ -1,7 +1,8 @@
 package com.example.mapmory.diary.dto;
 
 import com.example.mapmory.diary.domain.Diary;
-import com.example.mapmory.member.domain.entity.Member;
+import com.example.mapmory.marker.domain.Marker;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.Setter;
 @Setter
 public class DiaryRequestDto {
 
-    private Long memberId;
+    private Long markerId;
     private String title;
 
     private String content;
@@ -23,16 +24,16 @@ public class DiaryRequestDto {
 
     @Builder
     public DiaryRequestDto(Long memberId, String title, String content) {
-        this.memberId = memberId;
+        this.markerId = memberId;
 
         this.content = content;
         this.title = title;
     }
 
     //requestdto의 함수로 인스턴스를 리턴함
-    public Diary toEntity(Member member) {
+    public Diary toEntity(Marker marker) {
         return Diary.builder()
-                .member(member)
+                .marker(marker)
                 .title(title)
                 .content(content)
                 .imageUrl(imageUrl)

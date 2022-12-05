@@ -1,4 +1,5 @@
 package com.example.mapmory.marker.domain;
+import com.example.mapmory.diary.domain.Diary;
 import com.example.mapmory.member.domain.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
@@ -6,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -19,6 +22,8 @@ public class Marker {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @OneToMany(mappedBy = "marker", cascade = CascadeType.REMOVE)
+    private List<Diary> articles = new ArrayList<>();
     private Double longtitude;
 
     private Double latitude;

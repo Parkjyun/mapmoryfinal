@@ -8,9 +8,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MarkerResponseDto {
-    private Double longtitude;
+    private Long markerId;
 
-    private Double latitude;
+    private Double lng;
+
+    private Double lat;
 
 
 }
