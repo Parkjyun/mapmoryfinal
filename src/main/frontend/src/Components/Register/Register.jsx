@@ -47,6 +47,7 @@ export default function Signup() {
     axios.post("user/signup", body)
     .then((res) => {
       console.log(res.data)
+      goToMain();
 
     })
   }
@@ -132,6 +133,7 @@ export default function Signup() {
                 fullWidth
                 variant='contained'
                 disabled={button}
+
                 sx={{ mt: 3, mb: 2, bgcolor: "#f7e600", color: "success.main" }}
               >
                 SIGN UP
